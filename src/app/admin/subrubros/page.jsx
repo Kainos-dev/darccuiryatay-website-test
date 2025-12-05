@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db/prisma";
 import SubrubrosManager from "@/components/admin/SubrubrosManager";
 
 async function getSubrubros() {

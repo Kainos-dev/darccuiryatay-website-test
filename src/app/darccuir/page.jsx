@@ -1,6 +1,8 @@
-import { getSubrubrosRecursive } from "@/lib/getSubrubrosRecursive";
-
+import { getSubrubrosRecursive } from "@/lib/utils/getSubrubrosRecursive";
+import { getNews } from "@/actions/products/getNews";
+//components
 import Carrousel from "@/components/ui/Carrousel"
+import NewsCarrousel from "@/components/ui/NewsCarrousel";
 
 const rubro = "darccuir";
 const imagesDarccuir = [
@@ -12,21 +14,24 @@ const imagesDarccuir = [
 const darccuirTitle = "https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1763697279/letras-darccuir_ux09hk.png"
 const darccuirLogo = "https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1763697298/logo-darccuir-blanco_osmcmx.png"
 
-async function getSubrubros(rubro) {
-    // Solo traer los de nivel superior (sin padre)
-    return await getSubrubrosRecursive(null, rubro);
-}
+
 
 export default async function DarccuirPage() {
-    const subrubros = await getSubrubros("darccuir");
+    const subrubros = await getSubrubrosRecursive(null, rubro);
+    const news = await getNews(rubro, 12);
+    /* console.log("🚀 ~ Darccuir Page ~ news:", news) */
 
     return (
-        <Carrousel
-            rubro={rubro}
-            images={imagesDarccuir}
-            title={darccuirTitle}
-            yatayLogo={darccuirLogo}
-            subrubros={subrubros}
-        />
+        <>
+            <Carrousel
+                rubro={rubro}
+                images={imagesDarccuir}
+                title={darccuirTitle}
+                yatayLogo={darccuirLogo}
+                subrubros={subrubros}
+            />
+
+            <NewsCarrousel productos={news} />
+        </>
     )
 }

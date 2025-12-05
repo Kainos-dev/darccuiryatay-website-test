@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db/prisma";
 
 // GET - Obtener todos los subrubros
 export async function GET(request) {
@@ -39,6 +39,7 @@ export async function POST(request) {
         }
 
         const body = await request.json();
+        console.log("🚀 ~ POST ~ body:", body)
 
         // Validaciones
         if (!body.name || !body.slug || !body.rubro) {
@@ -48,14 +49,19 @@ export async function POST(request) {
             );
         }
 
-        // Verificar que el slug no exista
+        // Verificar que no exista un subrubro con ese slug en ese rubro
         const existingSlug = await prisma.subrubro.findUnique({
-            where: { slug: body.slug }
+            where: {
+                slug_rubro: {
+                    slug: body.slug,
+                    rubro: body.rubro
+                }
+            }
         });
 
         if (existingSlug) {
             return NextResponse.json(
-                { error: 'El slug ya existe' },
+                { error: 'Ya existe un subrubro con ese slug en este rubro' },
                 { status: 400 }
             );
         }

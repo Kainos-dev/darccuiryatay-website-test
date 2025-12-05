@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
-import { sendVerificationEmail } from "@/lib/email";
+import { prisma } from "@/lib/db/prisma";
+import { sendVerificationEmail } from "@/lib/email/email";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
@@ -76,20 +76,27 @@ export async function POST(req) {
         const user = await prisma.user.create({
             data: {
                 ...userData,
-                cart: {
-                    create: {} // ← Crea carrito vacío automáticamente
-                }
             },
         });
 
         // ✨ 5. Mergear carrito anónimo si existe
         const cookieStore = await cookies();
-        const sessionId = cookieStore.get("darccuiryatay_cart_session_id")?.value;
-        console.log("🚀 ~ POST ~ sessionId:", sessionId)
+        const sessionId = cookieStore.get("cart_session_id")?.value;
+
+        console.log("🍪 SessionId de cookie:", sessionId);
 
         if (sessionId) {
+            // Hay carrito anónimo → mergearlo
+            console.log("🔀 Mergeando carrito anónimo...");
             const { mergeCarts } = await import("@/actions/cart/merge-carts");
-            await mergeCarts(user.id, sessionId);
+            const result = await mergeCarts(user.id, sessionId);
+            console.log("✅ Resultado merge:", result);
+        } else {
+            // NO hay carrito anónimo → crear uno vacío
+            console.log("🆕 Creando carrito vacío...");
+            await prisma.cart.create({
+                data: { userId: user.id }
+            });
         }
 
         // 6. Enviar el email con el token

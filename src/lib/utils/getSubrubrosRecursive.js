@@ -1,4 +1,4 @@
-import { prisma } from "./prisma";
+import { prisma } from "@/lib/db/prisma";
 
 export async function getSubrubrosRecursive(parentId = null, rubro) {
     const subrubros = await prisma.subrubro.findMany({
@@ -7,7 +7,7 @@ export async function getSubrubrosRecursive(parentId = null, rubro) {
             rubro: rubro,
             active: true
         },
-        orderBy: { order: 'asc' }
+        orderBy: { order: 'desc' }
     });
 
     // Para cada subrubro, traer sus hijos recursivamente

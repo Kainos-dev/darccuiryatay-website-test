@@ -1,7 +1,7 @@
 // app/api/admin/subrubros/[id]/route.js
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db/prisma";
 
 // GET - Obtener un subrubro específico
 export async function GET(request, { params }) {

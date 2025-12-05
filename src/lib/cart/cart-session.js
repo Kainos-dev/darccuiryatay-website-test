@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { randomBytes } from "crypto";
 
-const CART_SESSION_COOKIE = "darccuiryatay_cart_session_id";
+const CART_SESSION_COOKIE = "cart_session_id";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 días
 
 export async function getOrCreateCartSession() {

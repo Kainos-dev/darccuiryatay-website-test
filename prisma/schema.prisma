@@ -54,7 +54,7 @@ model Cart {
     user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     // NUEVO: Para identificar carritos anónimos
-    sessionId String? @unique // ID temporal para invitados
+    sessionId String? // ID temporal para invitados
 
     items CartItem[]
 
@@ -74,6 +74,10 @@ model CartItem {
     product   Product @relation(fields: [productId], references: [id])
 
     quantity Int
+
+    // ✅ NUEVO: Soporte para variantes
+    variantColor String? // "Rojo", "Azul", etc.
+    variantHex   String? // "#FF0000", "#0000FF"
 
     // Relación N:1 con Cart
     cartId String @db.ObjectId
@@ -125,8 +129,8 @@ model Product {
 // Modelo separado para Subrubros (permite jerarquía)
 model Subrubro {
     id       String     @id @default(auto()) @map("_id") @db.ObjectId
-    name     String     @unique
-    slug     String     @unique
+    name     String
+    slug     String
     parentId String?    @db.ObjectId // Para crear jerarquía
     parent   Subrubro?  @relation("SubrubroHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     children Subrubro[] @relation("SubrubroHierarchy")
@@ -138,6 +142,8 @@ model Subrubro {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@unique([slug, rubro]) // <<--- UNIQUE por rubro + slug
+    @@unique([name, rubro])
     @@map("subrubros")
 }
 

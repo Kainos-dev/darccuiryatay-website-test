@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { clearCartSession } from "@/lib/cart-session";
+import { prisma } from "@/lib/db/prisma";
+import { clearCartSession } from "@/lib/cart/cart-session";
 
 export async function mergeCarts(userId, sessionId) {
     try {

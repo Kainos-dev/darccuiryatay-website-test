@@ -305,38 +305,60 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
             </div>
 
             {/* Imágenes de portada */}
-            <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
                 <h2 className="text-lg font-semibold mb-4">Imágenes de Portada</h2>
 
-                <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleCoverImagesUpload}
-                    className="mb-4"
-                    disabled={uploadingImages}
-                />
+                <label
+                    className={`
+                        flex flex-col items-center justify-center border-2 border-dashed 
+                        rounded-xl p-6 cursor-pointer transition
+                        ${uploadingImages ? "opacity-50 cursor-not-allowed" : "hover:border-blue-500"}
+                    `}
+                >
+                    <span className="text-gray-600 text-sm mb-2">
+                        {uploadingImages ? "Subiendo imágenes..." : "Haz clic o arrastra imágenes aquí"}
+                    </span>
 
-                {uploadingImages && <p className="text-sm text-blue-600">Subiendo imágenes...</p>}
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleCoverImagesUpload}
+                        className="hidden"
+                        disabled={uploadingImages}
+                    />
+                </label>
 
-                <div className="grid grid-cols-4 gap-4 mt-4">
+                {/* Gallery */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
                     {formData.coverImages.map((url, index) => (
-                        <div key={index} className="relative">
-                            <img src={url} alt="" className="w-full h-32 object-cover rounded" />
+                        <div key={index} className="relative group">
+                            <img
+                                src={url}
+                                alt=""
+                                className="w-full h-32 object-cover rounded-xl shadow-sm"
+                            />
+
+                            {/* Delete Button */}
                             <button
                                 type="button"
-                                onClick={() => setFormData({
-                                    ...formData,
-                                    coverImages: formData.coverImages.filter((_, i) => i !== index)
-                                })}
-                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs"
-                            >
+                                onClick={() =>
+                                    setFormData({
+                                        ...formData,
+                                        coverImages: formData.coverImages.filter((_, i) => i !== index),
+                                    })
+                                }
+                                className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full
+                                flex items-center justify-center text-sm opacity-0 group-hover:opacity-100
+                                transition"
+                                >
                                 ×
                             </button>
                         </div>
                     ))}
                 </div>
             </div>
+
 
             {/* Variantes de color */}
             <div className="bg-gray-50 p-6 rounded-lg">

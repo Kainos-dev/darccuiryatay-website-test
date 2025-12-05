@@ -1,6 +1,6 @@
 // app/admin/productos/page.jsx
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db/prisma";
 import DeleteProductButton from "@/components/admin/DeleteProductBtn";
 
 async function getProducts() {

@@ -31,7 +31,7 @@ function SubrubroItem({ subrubro, level = 0, onClose }) {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-full flex items-center justify-between px-4 py-2 
-                    text-sm text-gray-700 hover:bg-gray-100 transition-colors
+                    text-sm text-gray-700 hover:bg-gray-100 transition-colors uppercase
                     ${level > 0 ? 'pl-' + (4 + level * 4) : ''}`}
             >
                 <span>{subrubro.name}</span>
@@ -101,15 +101,12 @@ export default function SubrubrosNavBar({ subrubros }) {
                                         onClick={() => setOpenDropdown(
                                             openDropdown === padre.id ? null : padre.id
                                         )}
-                                        className="whitespace-nowrap px-4 py-2 rounded-full
-                                                bg-gray-100 hover:bg-gray-200
-                                                text-gray-700 text-sm font-medium
-                                                flex items-center gap-2"
+                                        className="whitespace-nowrap px-4 py-2 text-white text-base font-medium
+                                                flex items-center gap-2 uppercase"
                                     >
                                         {padre.name}
                                         <ChevronDown
-                                            className={`w-4 h-4 transition-transform ${openDropdown === padre.id ? 'rotate-180' : ''
-                                                }`}
+                                            className={`w-4 h-4 transition-transform ${openDropdown === padre.id ? 'rotate-180' : ''}`}
                                         />
                                     </motion.button>
 

@@ -2,13 +2,15 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db/prisma";
 import bcrypt from "bcryptjs";
 import { mergeCarts } from "@/actions/cart/merge-carts";
 import { cookies } from "next/headers";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
+
+    debug: false, // ← AGREGAR ESTO - deshabilita logs excesivos
 
     providers: [
         Credentials({
@@ -52,8 +54,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
 
     session: {
-        strategy: "jwt", // Usar JWT en lugar de sessions de DB
-        maxAge: 30 * 24 * 60 * 60, // 30 días
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60,
+        updateAge: 24 * 60 * 60, // IMPORTANTE: Solo actualizar cada 24 horas
     },
 
     callbacks: {
@@ -100,5 +103,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     secret: process.env.NEXTAUTH_SECRET,
-    debug: process.env.NODE_ENV === "development",
 });

@@ -63,7 +63,7 @@ const mayoristaSchema = z.object({
         .min(7, "El teléfono es demasiado corto")
         .max(15, "El teléfono es demasiado largo")
         .regex(/^\+?[0-9]{7,15}$/, "Formato de teléfono inválido (solo números y opcional '+')"),
-    local: z
+    storeName: z
         .string()
         .min(2, "El local debe tener al menos 2 caracteres")
         .max(100, "El local no puede exceder 100 caracteres"),

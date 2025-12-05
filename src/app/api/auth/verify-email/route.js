@@ -1,7 +1,7 @@
 // app/api/auth/verify-email/route.js
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { sendWelcomeEmail } from "@/lib/email";
+import { prisma } from "@/lib/db/prisma";
+import { sendWelcomeEmail } from "@/lib/email/email";
 
 export async function POST(req) {
     try {
