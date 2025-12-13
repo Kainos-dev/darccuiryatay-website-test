@@ -118,6 +118,7 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
         });
     };
 
+    // Remove variant
     const removeVariant = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -232,19 +233,24 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
 
                     <div>
                         <label className="block text-sm font-medium mb-2">Stock</label>
-                        <input
-                            type="number"
+
+                        <select
                             value={formData.stock ?? ""}
-                            onChange={(e) => {
-                                const value = e.target.value;
+                            onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    stock: value === "" ? "" : Number(value)
-                                });
-                            }}
+                                    stock: e.target.value,
+                                })
+                            }
                             className="w-full px-3 py-2 border rounded-lg"
-                        />
+                        >
+                            <option value="">Selecciona una opción</option>
+                            <option value="DISPONIBLE">DISPONIBLE</option>
+                            <option value="SIN_STOCK">SIN STOCK</option>
+                            <option value="CONSULTAR">CONSULTAR</option>
+                        </select>
                     </div>
+
                 </div>
 
                 <div>
@@ -351,7 +357,7 @@ export default function ProductFormWithSubrubros({ subrubros: initialSubrubros }
                                 className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full
                                 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100
                                 transition"
-                                >
+                            >
                                 ×
                             </button>
                         </div>

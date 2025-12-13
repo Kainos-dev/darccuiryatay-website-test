@@ -9,7 +9,7 @@ const menuItems = [
     { href: "/admin/users", label: "Usuarios", icon: "👤" },
     { href: "/admin/products", label: "Productos", icon: "🛒" },
     { href: "/admin/subrubros", label: "Subrubros", icon: "📑" },
-    { href: "/admin/orders", label: "Pedidos", icon: "📦" },
+    { href: "/admin/locales", label: "Locales", icon: "📦" },
 ];
 
 export default function AdminSidebar() {

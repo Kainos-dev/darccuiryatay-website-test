@@ -3,6 +3,7 @@ import { getNews } from "@/actions/products/getNews";
 //components
 import Carrousel from "@/components/ui/Carrousel"
 import NewsCarrousel from "@/components/ui/NewsCarrousel";
+import FeaturedProductsSection from "@/components/ui/FeaturedProductsSection";
 
 const rubro = "darccuir";
 const imagesDarccuir = [
@@ -17,6 +18,15 @@ const darccuirLogo = "https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q
 
 
 export default async function DarccuirPage() {
+    const productsForSection = await prisma.product.findMany({
+        where: {
+            rubro: "darccuir"
+        },
+        orderBy: { createdAt: "desc" },
+        take: 4
+    });
+
+
     const subrubros = await getSubrubrosRecursive(null, rubro);
     const news = await getNews(rubro, 12);
     /* console.log("🚀 ~ Darccuir Page ~ news:", news) */
@@ -32,6 +42,12 @@ export default async function DarccuirPage() {
             />
 
             <NewsCarrousel productos={news} />
+
+            <FeaturedProductsSection
+                products={productsForSection}
+                heroImage={"https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1760930763/bg-hero-03_jmk49f.jpg"}
+            />
         </>
     )
 }
+

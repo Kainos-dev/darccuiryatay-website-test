@@ -54,7 +54,7 @@ model Cart {
     user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     // NUEVO: Para identificar carritos anónimos
-    sessionId String? // ID temporal para invitados
+    sessionId String? @unique
 
     items CartItem[]
 
@@ -103,6 +103,12 @@ enum Rubro {
     yatay
 }
 
+enum StockStatus {
+    DISPONIBLE
+    SIN_STOCK
+    CONSULTAR
+}
+
 model Product {
     id             String   @id @default(auto()) @map("_id") @db.ObjectId
     sku            String   @unique
@@ -117,10 +123,10 @@ model Product {
     subrubros      String[] // Array de IDs de subrubros
 
     // Campos útiles para administración
-    active    Boolean    @default(true)
-    stock     Int        @default(0)
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
+    active    Boolean     @default(true)
+    stock     StockStatus @default(DISPONIBLE)
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
     cartItems CartItem[]
 
     @@map("products")
@@ -145,6 +151,26 @@ model Subrubro {
     @@unique([slug, rubro]) // <<--- UNIQUE por rubro + slug
     @@unique([name, rubro])
     @@map("subrubros")
+}
+
+// Modelo para gestionar los locales de clientes
+model Local {
+    id         String  @id @default(auto()) @map("_id") @db.ObjectId
+    nroCliente String  @unique @map("nro_cliente")
+    nombre     String
+    provincia  String
+    localidad  String
+    ubicacion  String? // Dirección física (opcional)
+    linkGmaps  String? @map("link_gmaps") // Link de Google Maps (opcional)
+    redSocial  String? @map("red_social") // Link de red social (opcional)
+    imagenUrl  String? @map("imagen_url") // URL de la imagen del local (opcional)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@index([provincia])
+    @@index([localidad])
+    @@map("locales")
 }
 
 // Opcional: Modelo para trackear cambios de precio

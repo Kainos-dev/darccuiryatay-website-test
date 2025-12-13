@@ -22,7 +22,7 @@ export default function UserDropdown({ user }) {
                         className="rounded-full cursor-pointer border border-gray-300"
                     />
                 ) : (
-                    <UserRound className="w-8 h-8 text-gray-200 cursor-pointer" />
+                    <UserRound size={25} className="text-gray-200 cursor-pointer mb-1" />
                 )}
             </Menu.Button>
 

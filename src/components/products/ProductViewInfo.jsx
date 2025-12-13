@@ -110,15 +110,6 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
                 </div>
             )}
 
-            {/* Stock */}
-            {product.stock !== undefined && (
-                <div className="border-t border-gray-200 pt-4">
-                    <p className="text-sm text-gray-600">
-                        Stock disponible: <span className="font-semibold">{product.stock}</span>
-                    </p>
-                </div>
-            )}
-
             {/* Botón Volver */}
             <button
                 onClick={handleBack}

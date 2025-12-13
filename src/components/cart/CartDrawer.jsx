@@ -1,14 +1,58 @@
 "use client";
 
+import { inter, habibi } from "@/app/ui/fonts";
+import { useState } from "react";
 import { X, Minus, Plus, Trash2 } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
+import { updateCartItem as updateCartItemAction } from "@/actions/cart/update-cart-item";
+import { removeCartItem as removeCartItemAction } from "@/actions/cart/remove-cart-item";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
-export default function CartDrawer({ isOpen, onClose }) {
+export default function CartDrawer({ rubro, isOpen, onClose }) {
     const { items, getTotal, updateQuantity, removeItem } = useCartStore();
 
     const total = getTotal();
+
+    // ✅ Handler para actualizar cantidad (cliente + servidor)
+    const handleUpdateQuantity = async (productId, variantColor, newQuantity) => {
+        try {
+            // 1. Optimistic update (cliente)
+            updateQuantity(productId, variantColor, newQuantity);
+
+            // 2. Actualizar servidor
+            const result = await updateCartItemAction(productId, variantColor, newQuantity);
+
+            if (!result.ok) {
+                toast.error(result.message);
+                // Aquí podrías revertir el cambio si falla (opcional)
+            }
+        } catch (error) {
+            toast.error('Error al actualizar cantidad');
+            console.error(error);
+        }
+    };
+
+    // ✅ Handler para eliminar item (cliente + servidor)
+    const handleRemoveItem = async (productId, variantColor) => {
+        try {
+            // 1. Optimistic update (cliente)
+            removeItem(productId, variantColor);
+
+            // 2. Eliminar del servidor
+            const result = await removeCartItemAction(productId, variantColor);
+
+            if (result.ok) {
+                toast.success('Producto eliminado');
+            } else {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            toast.error('Error al eliminar producto');
+            console.error(error);
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -21,7 +65,7 @@ export default function CartDrawer({ isOpen, onClose }) {
             />
 
             {/* Drawer */}
-            <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+            <div className={`${inter.className} fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300`}>
 
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b">
@@ -53,8 +97,8 @@ export default function CartDrawer({ isOpen, onClose }) {
                             <CartItem
                                 key={`${item.id}-${item.variant?.color || 'default'}`}
                                 item={item}
-                                onUpdateQuantity={updateQuantity}
-                                onRemove={removeItem}
+                                onUpdateQuantity={handleUpdateQuantity}
+                                onRemove={handleRemoveItem}
                             />
                         ))
                     )}
@@ -73,16 +117,16 @@ export default function CartDrawer({ isOpen, onClose }) {
 
                         {/* Botón checkout */}
                         <Link
-                            href="/cart"
+                            href={`/cart?from=/${rubro}`}
                             onClick={onClose}
-                            className="block w-full bg-[#8c622a] text-white text-center py-3 rounded-lg font-semibold hover:brightness-110 transition"
+                            className={`block w-full bg-[#8c622a] text-white text-center py-3 rounded-lg font-semibold hover:brightness-110 transition`}
                         >
                             Ir al Checkout
                         </Link>
 
                         <button
                             onClick={onClose}
-                            className="w-full text-gray-600 text-sm hover:text-gray-900 transition"
+                            className={`${habibi.className} w-full text-gray-600 text-sm hover:text-gray-900 transition cursor-pointer`}
                         >
                             Continuar comprando
                         </button>
@@ -95,6 +139,38 @@ export default function CartDrawer({ isOpen, onClose }) {
 
 // ===== Componente de Item individual =====
 function CartItem({ item, onUpdateQuantity, onRemove }) {
+    // Estado por-item para bloquear botones mientras se hace la request
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    // Maneja cambios de cantidad (client + server) evitando spam clicks
+    const handleUpdate = async (newQty) => {
+        // evita cantidades inválidas
+        if (newQty < 1) return;
+        if (newQty === item.quantity) return;
+        if (isUpdating) return;
+
+        try {
+            setIsUpdating(true);
+            // Llamamos al handler del padre (optimistic update ya maneja el store)
+            await onUpdateQuantity(item.id, item.variant?.color, newQty);
+        } catch (err) {
+            console.error(err);
+            // opcional: toast aquí
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleRemoveClick = async () => {
+        if (isUpdating) return; // evita conflictos mientras actualiza
+        setIsUpdating(true);
+        try {
+            await onRemove(item.id, item.variant?.color);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
     return (
         <div className="flex gap-4 bg-gray-50 p-3 rounded-lg">
             {/* Imagen */}
@@ -135,12 +211,10 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                     {/* Cantidad */}
                     <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                         <button
-                            onClick={() => onUpdateQuantity(
-                                item.id,
-                                item.variant?.color,
-                                item.quantity - 1
-                            )}
-                            className="p-1 hover:bg-gray-100 transition"
+                            onClick={() => handleUpdate(item.quantity - 1)}
+                            disabled={item.quantity <= 1 || isUpdating}
+                            className="p-1 hover:bg-gray-100 disabled:opacity-30 transition"
+                            aria-label="Disminuir cantidad"
                         >
                             <Minus size={14} />
                         </button>
@@ -148,12 +222,10 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                             {item.quantity}
                         </span>
                         <button
-                            onClick={() => onUpdateQuantity(
-                                item.id,
-                                item.variant?.color,
-                                item.quantity + 1
-                            )}
-                            className="p-1 hover:bg-gray-100 transition"
+                            onClick={() => handleUpdate(item.quantity + 1)}
+                            disabled={item.quantity >= (item.stock || 999) || isUpdating}
+                            className="p-1 hover:bg-gray-100 disabled:opacity-30 transition"
+                            aria-label="Aumentar cantidad"
                         >
                             <Plus size={14} />
                         </button>
@@ -161,8 +233,10 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
                     {/* Eliminar */}
                     <button
-                        onClick={() => onRemove(item.id, item.variant?.color)}
-                        className="p-1 text-red-500 hover:bg-red-50 rounded transition"
+                        onClick={handleRemoveClick}
+                        className="p-1 text-red-500 hover:bg-red-50 rounded transition disabled:opacity-30"
+                        disabled={isUpdating}
+                        aria-label="Eliminar producto"
                     >
                         <Trash2 size={18} />
                     </button>

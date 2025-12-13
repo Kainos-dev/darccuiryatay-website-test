@@ -64,7 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async signIn({ user }) {
             try {
                 const cookieStore = await cookies();
-                const sessionId = cookieStore.get("darccuiryatay_cart_session_id")?.value;
+                const sessionId = cookieStore.get("cart_session_id")?.value;
 
                 if (sessionId && user.id) {
                     await mergeCarts(user.id, sessionId);

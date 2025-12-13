@@ -17,15 +17,11 @@ export default function AddToCartButton({
     // ✅ Zustand store
     const addItem = useCartStore(state => state.addItem);
 
-    // Determinar stock disponible
-    const availableStock = selectedVariant?.stock ?? product.stock ?? 0;
-    const isOutOfStock = availableStock === 0;
+    const isOutOfStock = product.stock == "SIN_STOCK"
 
     // Handlers
     const increaseQuantity = () => {
-        if (quantity < availableStock) {
-            setQuantity(prev => prev + 1);
-        }
+        setQuantity(prev => prev + 1);
     };
 
     const decreaseQuantity = () => {
@@ -85,14 +81,10 @@ export default function AddToCartButton({
 
             {/* Stock */}
             <div className="mb-4">
-                {isOutOfStock ? (
-                    <p className="text-red-500 font-semibold">Sin stock disponible</p>
-                ) : (
-                    <p className="text-sm text-gray-600">
-                        Stock disponible:{" "}
-                        <span className="font-semibold text-gray-900">{availableStock}</span>
-                    </p>
-                )}
+                <p className="text-sm text-gray-600">
+                    Stock:{" "}
+                    <span className="font-semibold text-gray-900">{product.stock}</span>
+                </p>
             </div>
 
             {/* Selector + Botón */}
@@ -116,14 +108,13 @@ export default function AddToCartButton({
                             if (val >= 1 && val <= availableStock) setQuantity(val);
                         }}
                         min="1"
-                        max={availableStock}
                         disabled={isOutOfStock}
                         className="w-16 text-center font-semibold text-gray-900 border-x border-gray-300 focus:outline-none"
                     />
 
                     <button
                         onClick={increaseQuantity}
-                        disabled={quantity >= availableStock || isOutOfStock}
+                        disabled={isOutOfStock}
                         className="p-2 hover:bg-gray-100 disabled:opacity-30 transition"
                     >
                         <Plus size={20} className="text-gray-700" />
@@ -160,9 +151,9 @@ export default function AddToCartButton({
             </div>
 
             {/* Stock máximo */}
-            {quantity >= availableStock && !isOutOfStock && (
+            {/* {!isOutOfStock && (
                 <p className="text-xs text-amber-600 mt-2">⚠️ Has alcanzado el stock máximo disponible</p>
-            )}
+            )} */}
         </div>
     );
 }

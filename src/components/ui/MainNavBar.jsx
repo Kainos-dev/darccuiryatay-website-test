@@ -5,8 +5,9 @@ import { useSession } from "next-auth/react";       //usamos esto en lugar de "a
 import Image from "next/image"
 import Link from "next/link"
 import { Search, UserRound, ShoppingCart } from "lucide-react";
+import { inter } from "@/app/ui/fonts";
 // components : 
-import BtnLogin from "./BtnLogin"
+/* import BtnLogin from "./BtnLogin" */
 import UserDropdown from "./UserDropdown";
 import CartIcon from "../cart/CartIcon";
 import CartDrawer from "../cart/CartDrawer";
@@ -17,7 +18,7 @@ export default function MainNavBar({ rubro, logo }) {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
-        <div className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-4 z-20">
+        <div className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-10 z-20">
             <Image
                 src={logo}
                 alt={`${rubro} Logo`}
@@ -45,21 +46,43 @@ export default function MainNavBar({ rubro, logo }) {
                 </span>
             </div >
 
-            <div className="flex items-center gap-8">
-                <CartIcon onClick={() => setIsCartOpen(true)} />
+            <div className={`${inter.className} flex items-center gap-3 text-white px-4 h-14`}>
+                {/* LOCALES */}
+                <Link
+                    href="/locales"
+                    className="text-sm font-medium hover:text-gray-300 transition-colors"
+                >
+                    LOCALES
+                </Link>
 
+                {/* Separador */}
+                <div className=" w-px bg-gray-500/40">/</div>
+
+                {/* Usuario */}
+                {session?.user ? (
+                    <UserDropdown user={session.user} />
+                ) : (
+                    <Link
+                        href="/auth/login"
+                        className="text-sm font-medium hover:text-gray-300 transition-colors"
+                    >
+                        INICIAR SESIÓN
+                    </Link>
+                )}
+
+                {/* Separador */}
+                <div className="w-px bg-gray-500/40">/</div>
+
+                {/* Carrito */}
                 <CartDrawer
+                    rubro={rubro}
                     isOpen={isCartOpen}
                     onClose={() => setIsCartOpen(false)}
                 />
 
-                {
-                    session?.user
-                        ? <UserDropdown user={session.user} />
-                        : <BtnLogin />
-                }
-
+                <CartIcon onClick={() => setIsCartOpen(true)} />
             </div>
+
         </div>
     )
 }

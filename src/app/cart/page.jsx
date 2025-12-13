@@ -5,15 +5,19 @@ import { useCartStore } from "@/store/useCartStore";
 import { clearCart as clearCartAction } from "@/actions/cart/clear-cart";
 import { updateCartItem as updateCartItemAction } from "@/actions/cart/update-cart-item";
 import { removeCartItem as removeCartItemAction } from "@/actions/cart/remove-cart-item";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from "lucide-react";
-import { inter } from "@/app/ui/fonts";
+import { inter, habibi } from "@/app/ui/fonts";
 import { toast } from "sonner";
 
 export default function CartPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    console.log("🚀 ~ CartPage ~ searchParams:", searchParams)
+    const from = searchParams.get("from") || "/products"; // fallback
+    console.log("🚀 ~ CartPage ~ from:", from)
     const { items, getTotal, updateQuantity, removeItem, clearCart } = useCartStore();
 
     const total = getTotal();
@@ -53,12 +57,20 @@ export default function CartPage() {
                     <p className="text-gray-600 mb-8">
                         Parece que aún no has agregado ningún producto. ¡Explora nuestra tienda!
                     </p>
-                    <Link
+                    {/* <Link
                         href="/products"
                         className="inline-flex items-center gap-2 bg-[#8c622a] text-white px-6 py-3 rounded-lg font-semibold hover:brightness-110 transition"
                     >
                         <ArrowLeft size={20} />
                         Ir a la tienda
+                    </Link> */}
+
+                    <Link
+                        href={from}
+                        className={`${habibi.className} inline-flex items-center gap-2 bg-[#8c622a] text-white px-6 py-3 rounded-lg font-semibold hover:brightness-110 transition`}
+                    >
+                        <ArrowLeft size={20} />
+                        IR A PRODUCTOS
                     </Link>
                 </div>
             </div>
@@ -141,7 +153,7 @@ export default function CartPage() {
                             </button>
 
                             {/* Info adicional */}
-                            <div className="mt-6 pt-6 border-t space-y-3 text-sm text-gray-600">
+                            {/* <div className="mt-6 pt-6 border-t space-y-3 text-sm text-gray-600">
                                 <div className="flex items-start gap-2">
                                     <span className="text-green-600">✓</span>
                                     <span>Envío gratis en compras mayores a $50.000</span>
@@ -154,7 +166,7 @@ export default function CartPage() {
                                     <span className="text-green-600">✓</span>
                                     <span>Pago seguro encriptado</span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

@@ -1,21 +1,28 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 
 export default function CartIcon({ onClick }) {
     const itemCount = useCartStore(state => state.getItemCount());
+    const [hasMounted, setHasMounted] = useState(false);
+
+    // 🔥 Esto garantiza que el componente solo renderice datos del store en el cliente
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
 
     return (
         <button
             onClick={onClick}
-            className="relative p-2 rounded-lg transition-colors cursor-pointer"
+            className="relative rounded-lg transition-colors cursor-pointer"
             aria-label="Carrito de compras"
         >
-            <ShoppingCart size={32} className="text-gray-200 hover:text-gray-400" />
+            <ShoppingCart size={24} className="text-gray-200 hover:text-gray-400 mb-1" />
 
-            {/* Badge con cantidad */}
-            {itemCount > 0 && (
+            {/* Badge con cantidad → solo render después del mount */}
+            {hasMounted && itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#8c622a] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-in zoom-in duration-200">
                     {itemCount > 99 ? '99+' : itemCount}
                 </span>

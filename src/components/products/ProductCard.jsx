@@ -1,9 +1,9 @@
-"use client";
-
-import { useState } from 'react';
-import { barlow, inter } from '@/app/ui/fonts';
-import Link from 'next/link';
+// components/ProductCard.jsx
+'use client';
+import { useState, memo } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { barlow, inter } from '@/app/ui/fonts';
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat('es-AR', {
@@ -13,66 +13,135 @@ const formatPrice = (price) => {
     }).format(price);
 };
 
-export default function ProductCard({ product }) {
+const ProductCard = memo(({ product }) => {
+    const [isHovered, setIsHovered] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
 
+    // Lógica de imágenes
+    const hasMultipleCoverImages = product.coverImages?.length >= 2;
+    const hasCoverImages = product.coverImages?.length > 0;
+
+    /* const mainImage = hasCoverImages
+        ? product.coverImages[0]
+        : product.variants?.[0]?.images?.[0]; */
+
+    const mainImage = "https://res.cloudinary.com/ddbhwo6fn/image/upload/c_fill,g_auto/f_auto,q_auto/v1760583671/Varios_Motivos_ly45wj.jpg"
+
+    const alternativeImage = hasMultipleCoverImages
+        ? product.coverImages[1]
+        : null;
+
+    const hasMainImage = typeof mainImage === 'string' && mainImage.trim().length > 0;
+
+    // Badge SENDEROS
+    const isSenderos = product.collection?.some(
+        item => item.toLowerCase() === 'senderos'
+    );
+
     return (
-        <Link
-            href={`/products/${product.id}`}
-            className="block"
-        >
+        <Link href={`/products/${product.id}`} className="block">
             <div
-                className={`${barlow.className} cursor-pointer flex flex-col h-full rounded-md shadow-md transition-all hover:shadow-[0_0_10px_rgba(0,0,0,0.25)]`}
-                /* onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)} */
+                className={`${inter.className} cursor-pointer flex flex-col h-full rounded-md shadow-md transition-all hover:shadow-[0_0_10px_rgba(0,0,0,0.25)]`}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
             >
-                {/* Contenedor de imagen */}
-                <div className="relative w-full overflow-hidden rounded-md bg-none shrink-0">
-                    <Image
-                        src={"https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1760909716/Frente_tbiemu.jpg"}
-                        alt={product.name}
-                        width={600}
-                        height={600}
-                        className="w-full h-auto object-cover"
-                    />
-                    {product.collection?.some(item => item.toLowerCase() === "senderos") && (
-                        <span className="absolute top-0 left-0 bg-[#A27B5C] rounded-tl-md text-white py-1 px-2 font-semibold">
+                {/* Contenedor de imagen optimizado */}
+                <div className="relative w-full aspect-square overflow-hidden rounded-t-sm bg-white shrink-0">
+                    {!imageLoaded && (
+                        <div className="absolute inset-0 bg-white animate-pulse flex justify-center items-center font-medium">CARGANDO IMAGEN</div>
+                    )}
+
+                    {/* Sin imagen */}
+                    {!hasMainImage && (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 text-lg font-semibold">
+                            Sin imagen disponible
+                        </div>
+                    )}
+
+                    {/* Con imágenes - Optimizado */}
+                    {hasMainImage && (
+                        <>
+                            {/* Imagen principal */}
+                            <Image
+                                src={mainImage}
+                                alt={product.name}
+                                fill
+                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                className={`object-contain transition-opacity duration-500 ${hasMultipleCoverImages && isHovered ? 'opacity-0' : 'opacity-100'
+                                    }`}
+                                loading="lazy"
+                                priority={false}
+                                onLoad={() => setImageLoaded(true)}
+                            />
+
+                            {/* Imagen alternativa en hover */}
+                            {hasMultipleCoverImages && (
+                                <Image
+                                    src={alternativeImage}
+                                    alt={`${product.name} - Vista alternativa`}
+                                    fill
+                                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                    className={`object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'
+                                        }`}
+                                    loading="lazy"
+                                    onLoad={() => setImageLoaded(true)}
+                                />
+                            )}
+                        </>
+                    )}
+
+                    {/* Badge SENDEROS */}
+                    {isSenderos && (
+                        <span className="absolute top-0 left-0 bg-brown rounded-tl-sm text-white py-1 px-2 text-sm font-semibold z-10">
                             SENDEROS
                         </span>
                     )}
-
                 </div>
 
-                <div className="font-(--font-barlow) p-4 sm:p-6 lg:p-8 mt-4 sm:mt-8 lg:mt-12 relative flex-1 flex flex-col justify-between">
-                    <h2 className="text-lg sm:text-xl lg:text-3xl font-semibold">
+                {/* Info del producto */}
+                <div className="p-4 sm:p-6 lg:p-8  relative flex-1 flex flex-col justify-between bg-white rounded-b-sm">
+                    <h2 className={`${barlow.className} text-lg sm:text-xl lg:text-3xl font-semibold line-clamp-2`}>
                         {product.name}
                     </h2>
 
-                    <div className={`font-(--font-inter) flex w-full ${product.price == 0 ? "justify-end" : "justify-between"} items-center mt-2 sm:mt-3 lg:mt-4 text-base sm:text-lg lg:text-2xl`}>
-                        {
-                            product.price > 0 && (
-                                <span>{formatPrice(product.price)}</span>
-                            )
-                        }
-                        <div className="flex items-center gap-1">
-                            {product.variants.slice(0, 2).map((variant) => (
-                                <div
-                                    key={variant.color.name}
-                                    className="w-6 h-6 rounded-full border"
-                                    style={{ backgroundColor: variant.color.hex }}
-                                    title={variant.color.name}
-                                ></div>
-                            ))}
-                            {product.variants.length > 2 && (
-                                <span className="text-sm sm:text-base">
-                                    +{product.variants.length - 2}
-                                </span>
-                            )}
-                        </div>
+                    <span className={`${inter.className} mt-1 text-sm sm:text-base`}>
+                        Código SKU: <b>{product.sku}</b>
+                    </span>
+
+                    <div
+                        className={`flex w-full ${product.price === 0 ? 'justify-end' : 'justify-between'
+                            } items-center mt-2 sm:mt-3 lg:mt-4 text-base sm:text-lg lg:text-xl`}
+                    >
+                        {product.price > 0 && (
+                            <span className="font-semibold">{formatPrice(product.price)}</span>
+                        )}
+
+                        {/* Colores de variantes */}
+                        {product.variants?.length > 0 && (
+                            <div className="flex items-center gap-1">
+                                {product.variants.slice(0, 2).map((variant, idx) => (
+                                    <div
+                                        key={variant.color?.name || idx}
+                                        className="w-6 h-6 rounded-full border border-gray-300"
+                                        style={{ backgroundColor: variant.color?.hex || '#ccc' }}
+                                        title={variant.color?.name || 'Color'}
+                                    />
+                                ))}
+
+                                {product.variants.length > 2 && (
+                                    <span className="text-sm sm:text-base text-gray-600">
+                                        +{product.variants.length - 2}
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </div>
-                    <span className={`${inter.className} mt-1`}>Código SKU: <b>{product.sku}</b></span>
                 </div>
             </div>
         </Link>
     );
-}
+});
+
+ProductCard.displayName = 'ProductCard';
+
+export default ProductCard;
