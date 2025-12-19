@@ -6,7 +6,7 @@ import { Rubro } from "@prisma/client";
 import { Search } from 'lucide-react';
 
 import InfiniteProductGrid from '@/components/products/InfiniteProductGrid';
-import SubrubrosNavBar from '@/components/ui/SubrubrosNavBar';
+import SubrubrosSection from '@/components/ui/SubrubrosSection';
 
 // Revalidación cada 5 minutos
 export const revalidate = 300;
@@ -127,7 +127,7 @@ export default async function DarccuirCatalogo({ searchParams }) {
                 </div>
 
                 <div className="relative">
-                    <SubrubrosNavBar subrubros={subrubros} />
+                    <SubrubrosSection subrubros={subrubros} variant="dark" />
                 </div>
 
                 {/* Productos con Suspense para streaming */}

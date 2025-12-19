@@ -87,7 +87,7 @@ export default function CartDrawer({ rubro, isOpen, onClose }) {
                             <p className="text-gray-500 mb-4">Tu carrito está vacío</p>
                             <button
                                 onClick={onClose}
-                                className="text-[#8c622a] font-semibold hover:underline"
+                                className="text-brown font-semibold hover:underline"
                             >
                                 Seguir comprando
                             </button>
@@ -110,7 +110,7 @@ export default function CartDrawer({ rubro, isOpen, onClose }) {
                         {/* Subtotal */}
                         <div className="flex justify-between text-lg font-bold">
                             <span>Subtotal:</span>
-                            <span className="text-[#8c622a]">
+                            <span className="text-brown">
                                 ${total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                             </span>
                         </div>
@@ -119,7 +119,7 @@ export default function CartDrawer({ rubro, isOpen, onClose }) {
                         <Link
                             href={`/cart?from=/${rubro}`}
                             onClick={onClose}
-                            className={`block w-full bg-[#8c622a] text-white text-center py-3 rounded-lg font-semibold hover:brightness-110 transition`}
+                            className={`block w-full bg-brown text-white text-center py-3 rounded-lg font-semibold hover:brightness-110 transition`}
                         >
                             Ir al Checkout
                         </Link>
@@ -202,12 +202,12 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                     </div>
                 )}
 
-                <p className="text-sm font-bold text-[#8c622a] mt-1">
+                <p className="text-sm font-bold text-brown mt-1">
                     ${item.price.toLocaleString('es-AR')}
                 </p>
 
                 {/* Controles */}
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-2 text-gray-800">
                     {/* Cantidad */}
                     <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                         <button

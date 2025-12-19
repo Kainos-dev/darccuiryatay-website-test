@@ -135,7 +135,7 @@ export default async function ProductosPage() {
                                     <td className="px-4 py-4 text-sm">
                                         <div className="flex gap-2">
                                             <Link
-                                                href={`/admin/productos/${product.id}/editar`}
+                                                href={`/admin/products/${product.id}/editar`}
                                                 className="text-blue-600 hover:text-blue-800"
                                             >
                                                 Editar

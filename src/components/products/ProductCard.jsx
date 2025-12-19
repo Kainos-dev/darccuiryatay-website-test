@@ -4,6 +4,7 @@ import { useState, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { barlow, inter } from '@/app/ui/fonts';
+import { CldImage } from 'next-cloudinary';
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat('es-AR', {
@@ -62,16 +63,15 @@ const ProductCard = memo(({ product }) => {
                     {hasMainImage && (
                         <>
                             {/* Imagen principal */}
-                            <Image
+                            <CldImage
                                 src={mainImage}
                                 alt={product.name}
                                 fill
+                                quality="auto"
+                                format="auto"
                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                 className={`object-contain transition-opacity duration-500 ${hasMultipleCoverImages && isHovered ? 'opacity-0' : 'opacity-100'
                                     }`}
-                                loading="lazy"
-                                priority={false}
-                                onLoad={() => setImageLoaded(true)}
                             />
 
                             {/* Imagen alternativa en hover */}

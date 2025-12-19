@@ -7,7 +7,12 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { domine } from '@/app/ui/fonts';
 
 // Componente recursivo para manejar cualquier nivel de jerarquía
-function SubrubroItem({ subrubro, level = 0, onClose, selectedSubrubro }) {
+function SubrubroItem({
+    subrubro,
+    level = 0,
+    onClose,
+    selectedSubrubro,
+}) {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
@@ -76,7 +81,7 @@ function SubrubroItem({ subrubro, level = 0, onClose, selectedSubrubro }) {
                 {/* Área clicable para abrir/cerrar (flecha) */}
                 <button
                     onClick={toggleOpen}
-                    className="p-1 hover:bg-black/10 rounded"
+                    className="p-1 hover:bg-light-brown/50 rounded-md cursor-pointer"
                 >
                     <ChevronRight
                         className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-90' : ''}`}
@@ -109,7 +114,7 @@ function SubrubroItem({ subrubro, level = 0, onClose, selectedSubrubro }) {
     );
 }
 
-export default function SubrubrosNavBar({ subrubros }) {
+export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
     const [openDropdown, setOpenDropdown] = useState(null);
     const dropdownRef = useRef(null);
     const router = useRouter();
@@ -117,6 +122,19 @@ export default function SubrubrosNavBar({ subrubros }) {
     const searchParams = useSearchParams();
 
     const selectedSubrubro = searchParams.get('subrubro');
+
+    const variants = {
+        dark: {
+            container: "text-dark",
+            link: "hover:text-gray-200",
+        },
+        light: {
+            container: "text-white",
+            link: "hover:text-gray-700",
+        },
+    };
+
+    const styles = variants[variant];
 
     // Cerrar dropdown al hacer click fuera
     useEffect(() => {
@@ -151,7 +169,7 @@ export default function SubrubrosNavBar({ subrubros }) {
                                 // Padre con dropdown - dividir acciones
                                 <>
                                     <div className={`flex items-center gap-1 px-4 py-2 rounded
-                                        ${isParentSelected ? 'bg-brown text-white' : 'text-black'}`}>
+                                        ${isParentSelected ? 'bg-brown text-white' : `${styles.container}`}`}>
 
                                         {/* Botón para filtrar por el padre */}
                                         <motion.button
@@ -180,7 +198,7 @@ export default function SubrubrosNavBar({ subrubros }) {
                                             onClick={() => setOpenDropdown(
                                                 openDropdown === padre.id ? null : padre.id
                                             )}
-                                            className="p-1 hover:bg-light-brown/50"
+                                            className="p-1 hover:bg-light-brown/50 rounded-md cursor-pointer"
                                         >
                                             <ChevronDown
                                                 className={`w-4 h-4 transition-transform ${openDropdown === padre.id ? 'rotate-180' : ''
@@ -232,7 +250,7 @@ export default function SubrubrosNavBar({ subrubros }) {
                                     }}
                                     className={`whitespace-nowrap px-4 py-2 text-base font-medium
                                             uppercase rounded
-                                            ${isParentSelected ? 'bg-[#A27B5C] text-white' : 'text-black'}`}
+                                            ${isParentSelected ? 'bg-brown text-white' : `${styles.container}`}`}
                                 >
                                     {padre.name}
                                 </motion.button>

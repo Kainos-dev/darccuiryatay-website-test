@@ -2,7 +2,7 @@
 // components/admin/DeleteProductButton.jsx
 'use client';
 
-import { deleteProduct } from "@/actions/products/deleteProduct.js";
+import { deleteProduct } from "@/actions/products/products.actions.js";
 
 export default function DeleteProductButton({ productId }) {
     const handleDelete = async (e) => {

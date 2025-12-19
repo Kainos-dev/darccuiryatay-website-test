@@ -4,7 +4,7 @@
 import { obtenerLocales } from "@/actions/locales/locales";
 import LocalesPublicClient from "@/components/locales/LocalesPublicClient";
 
-import { inter, habibi } from "@/app/ui/fonts";
+import { inter, domine } from "@/app/ui/fonts";
 
 export const metadata = {
     title: "Nuestros Locales",
@@ -28,7 +28,7 @@ export default async function LocalesPage() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    <h1 className={`${domine.className} text-4xl md:text-5xl font-bold text-gray-900 mb-4`}>
                         Nuestros Locales
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">

@@ -225,7 +225,7 @@ function LocalListItem({ local }) {
                                 href={local.linkGmaps}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                                className="flex items-center gap-2 bg-brown text-white px-6 py-2 rounded-lg hover:bg-light-brown transition font-medium"
                             >
                                 <MapPin className="w-4 h-4" />
                                 Ver en Mapa

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import ProductCard from "@/components/products/ProductCard";
 import { motion } from "framer-motion";
-
 // ============================================
 // OPCIÓN 1: SCROLL INTERNO CON FADE ANIMATIONS (RECOMENDADA)
 // ============================================
@@ -35,7 +34,7 @@ export default function FeaturedProductsSection({ products, heroImage }) {
                         className="absolute bottom-0 left-0 p-8 text-white"
                     >
                         <h2 className="text-4xl font-bold drop-shadow-xl">
-                            NUESTROS PRODUCTOS
+                            NUESTROS MATES
                         </h2>
                         <p className="text-lg mt-2 drop-shadow-xl">
                             Hechos para durar. Pensados para disfrutar
@@ -51,9 +50,10 @@ export default function FeaturedProductsSection({ products, heroImage }) {
                     className="flex flex-col lg:h-[650px]"
                 >
                     {/* Contenedor con scroll */}
+                    {/* Contenedor con scroll */}
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
                         {/* GRID 2×2 DE PRODUCTOS */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 auto-rows-[minmax(400px,auto)]">
                             {products.map((product, index) => (
                                 <motion.div
                                     key={product.id}
@@ -61,8 +61,11 @@ export default function FeaturedProductsSection({ products, heroImage }) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.4, delay: index * 0.1 }}
                                     viewport={{ once: true, margin: "-50px" }}
+                                    className="flex"
                                 >
-                                    <ProductCard product={product} />
+                                    <div className="w-full">
+                                        <ProductCard product={product} />
+                                    </div>
                                 </motion.div>
                             ))}
                         </div>
@@ -76,7 +79,7 @@ export default function FeaturedProductsSection({ products, heroImage }) {
                         className="flex justify-center mt-6 pt-4 border-t border-gray-200"
                     >
                         <motion.a
-                            href="/darccuir/catalogo"
+                            href="/darccuir/catalog"
                             whileTap={{ scale: 0.95 }}
                             className="px-24 py-2 bg-brown text-white rounded-md font-semibold tracking-wide hover:bg-light-brown transition-colors"
                         >

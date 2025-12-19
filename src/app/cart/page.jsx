@@ -15,8 +15,8 @@ import { toast } from "sonner";
 export default function CartPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    console.log("🚀 ~ CartPage ~ searchParams:", searchParams)
-    const from = searchParams.get("from") || "/products"; // fallback
+    /* console.log("🚀 ~ CartPage ~ searchParams:", searchParams) */
+    const from = searchParams.get("from") || "/"; // fallback
     console.log("🚀 ~ CartPage ~ from:", from)
     const { items, getTotal, updateQuantity, removeItem, clearCart } = useCartStore();
 
@@ -67,7 +67,7 @@ export default function CartPage() {
 
                     <Link
                         href={from}
-                        className={`${habibi.className} inline-flex items-center gap-2 bg-[#8c622a] text-white px-6 py-3 rounded-lg font-semibold hover:brightness-110 transition`}
+                        className={`${habibi.className} inline-flex items-center gap-2 bg-brown text-white px-6 py-3 rounded-lg font-semibold hover:brightness-110 transition`}
                     >
                         <ArrowLeft size={20} />
                         IR A PRODUCTOS
@@ -85,7 +85,7 @@ export default function CartPage() {
                 <div className="mb-8">
                     <Link
                         href="/products"
-                        className="inline-flex items-center gap-2 text-gray-600 hover:text-[#8c622a] transition mb-4"
+                        className="inline-flex items-center gap-2 text-gray-600 hover:text-brown transition mb-4"
                     >
                         <ArrowLeft size={20} />
                         Continuar comprando
@@ -138,7 +138,7 @@ export default function CartPage() {
                                 </div>
                                 <div className="border-t pt-3 flex justify-between text-lg font-bold text-gray-900">
                                     <span>Total</span>
-                                    <span className="text-[#8c622a]">
+                                    <span className="text-brown">
                                         ${total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                                     </span>
                                 </div>
@@ -147,9 +147,9 @@ export default function CartPage() {
                             {/* Botón proceder al pago */}
                             <button
                                 onClick={() => router.push('/checkout')}
-                                className="w-full bg-[#8c622a] text-white py-3 rounded-lg font-semibold hover:brightness-110 transition shadow-lg"
+                                className="w-full bg-brown text-white py-3 rounded-lg font-semibold hover:brightness-110 transition shadow-lg"
                             >
-                                Proceder al pago
+                                Realizar pedido
                             </button>
 
                             {/* Info adicional */}
@@ -237,9 +237,9 @@ function CartItemCard({ item, onUpdateQuantity, onRemove }) {
             {/* Loader overlay */}
             {isUpdating && (
                 <div className="absolute inset-0 bg-white/50 rounded-xl flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8c622a]" />
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brown" />
                 </div>
-            )}
+            )} 
 
             {/* Imagen */}
             <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100 shrink-0">
@@ -309,7 +309,7 @@ function CartItemCard({ item, onUpdateQuantity, onRemove }) {
 
                     {/* Precio */}
                     <div className="text-right">
-                        <p className="text-xl font-bold text-[#8c622a]">
+                        <p className="text-xl font-bold text-brown">
                             ${(item.price * item.quantity).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                         </p>
                         <p className="text-xs text-gray-500">

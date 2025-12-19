@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ZoomOverlay from './ZoomOverlay';
 import ProductViewInfo from './ProductViewInfo';
+import { CldImage } from 'next-cloudinary';
 
 export default function ProductView({ product }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -23,11 +24,6 @@ export default function ProductView({ product }) {
             </div>
         );
     }
-
-    // CLOUDINARY IMAGE LOADER
-    /* const cloudinaryLoader = ({ src, width, quality }) => {
-        return `https://res.cloudinary.com/ddbhwo6fn/image/upload/w_${width},q_${quality || 80}/${src}`;
-    }; */
 
     // Memoizar cálculos costosos
     const imageData = useMemo(() => {
@@ -126,12 +122,16 @@ export default function ProductView({ product }) {
                         onMouseMove={handleZoomMove}
                         className="relative bg-white rounded-lg overflow-hidden min-h-[450px] lg:min-h-[825px] cursor-crosshair"
                     >
-                        <Image
+                        <CldImage
                             src={allImages[currentImageIndex]}
                             alt={`${product.name} - Imagen ${currentImageIndex + 1}`}
                             fill
                             sizes="(max-width: 1024px) 100vw, 50vw"
+                            crop="fill"
                             className="w-full h-full object-contain"
+                            gravity="auto"
+                            quality="auto:best"  // Mejor calidad para hero images
+                            format="auto"
                             priority={currentImageIndex === 0}
                         />
 
@@ -205,6 +205,20 @@ export default function ProductView({ product }) {
                                     loading="lazy"
                                     sizes="80px"
                                 />
+                                {/* <CldImage
+                                    key={`${idx}-thumb`}
+                                    src={img}
+                                    alt={`Miniatura ${idx + 1}`}
+                                    width={80}
+                                    height={80}
+                                    className="w-full h-full object-contain"
+                                    loading="lazy"
+                                    crop="thumb"  // Thumbnail inteligente
+                                    gravity="auto"
+                                    quality="auto"
+                                    format="auto"
+                                    sizes="80px"
+                                /> */}
                             </button>
                         ))}
                     </div>

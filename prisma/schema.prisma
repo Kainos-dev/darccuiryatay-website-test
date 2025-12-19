@@ -42,6 +42,7 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    orders    Order[]
 
     @@map("users")
 }
@@ -54,7 +55,7 @@ model Cart {
     user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     // NUEVO: Para identificar carritos anónimos
-    sessionId String? @unique
+    sessionId String? 
 
     items CartItem[]
 
@@ -186,3 +187,84 @@ model Local {
  * @@map("price_history")
  * }
  */
+
+//** ORDERS
+
+enum OrderStatus {
+    PENDIENTE // Orden recibida, esperando confirmación
+    CONFIRMADO // Confirmado por el admin
+    EN_PREPARACION // Preparando el pedido
+    ENVIADO // Pedido enviado
+    ENTREGADO // Pedido entregado
+    CANCELADO // Cancelado
+}
+
+model Order {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    // Número de orden
+    orderNumber String @unique
+
+    // Relación con usuario (opcional)
+    userId String? @db.ObjectId
+    user   User?   @relation(fields: [userId], references: [id])
+
+    // Datos del cliente
+    customerName  String
+    customerEmail String
+    customerPhone String?
+
+    // Dirección de envío
+    shippingAddress Json
+
+    // Items
+    items OrderItem[]
+
+    // Totales
+    subtotal Float
+    shipping Float @default(0)
+    total    Float
+
+    // Estado
+    status            OrderStatus @default(PENDIENTE)
+    estimatedDelivery String?
+
+    // Notas
+    notes      String?
+    adminNotes String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([customerEmail])
+    @@index([status])
+    @@index([createdAt])
+    @@map("orders")
+}
+
+model OrderItem {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    orderId String @db.ObjectId
+    order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+    // Datos del producto (guardados en el momento de la compra)
+    productId   String @db.ObjectId
+    productName String
+    productSku  String
+    price       Float // Precio al momento de la compra
+
+    // Variante si aplica
+    variantColor String?
+    variantHex   String?
+
+    quantity Int
+
+    // Subtotal de este item
+    subtotal Float // price * quantity
+
+    @@map("order_items")
+}
+
+// Agregar esta relación al modelo User existente:
+// orders Order[]

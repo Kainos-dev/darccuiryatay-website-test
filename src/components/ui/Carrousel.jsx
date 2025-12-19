@@ -7,7 +7,7 @@ import { inter } from '@/app/ui/fonts';
 
 // components :
 import MainNavBar from "./MainNavBar"
-import SubrubrosNavBar from "./SubrubrosNavBar"
+import SubrubrosSection from "./SubrubrosSection";
 
 const MESSAGES = [
     "📦 Envíos a todo el país",
@@ -82,7 +82,7 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
             </div>
             <MainNavBar rubro={rubro} logo={yatayLogo} />
 
-            <SubrubrosNavBar subrubros={subrubros} />
+            <SubrubrosSection subrubros={subrubros} variant="light" />
 
             {/* Contenido */}
             {/* <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">

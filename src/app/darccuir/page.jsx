@@ -1,5 +1,5 @@
 import { getSubrubrosRecursive } from "@/lib/utils/getSubrubrosRecursive";
-import { getNews } from "@/actions/products/getNews";
+import { getNews } from "@/actions/products/products.actions.js";
 //components
 import Carrousel from "@/components/ui/Carrousel"
 import NewsCarrousel from "@/components/ui/NewsCarrousel";

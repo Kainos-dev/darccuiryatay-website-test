@@ -84,14 +84,14 @@ export default function InfiniteProductGrid({ initialProductos, initialPaginatio
     }, [loadMore, pagination.hasMore, loading]);
 
     return (
-        <div className="w-full">
+        <div className="w-full">    
             {/* Product Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
                 {productos.map(producto => (
                     <ProductCard
                         key={producto.id || producto._id}
                         product={producto}
-                    />
+                    />          
                 ))}
             </div>
 
