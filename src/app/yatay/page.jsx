@@ -4,6 +4,7 @@ import { getNews } from "@/actions/products/products.actions.js";
 import Carrousel from "@/components/ui/Carrousel"
 import NewsCarrousel from "@/components/ui/NewsCarrousel";
 import FeaturedProductsSection from "@/components/ui/FeaturedProductsSection";
+import Footer from "@/components/ui/Footer";
 
 const rubro = "yatay";
 const imagesYatay = [
@@ -108,6 +109,8 @@ export default async function YatayPage() {
                 products={productsForSection}
                 heroImage={"https://res.cloudinary.com/ddbhwo6fn/image/upload/f_auto,q_auto/v1760930763/bg-hero-03_jmk49f.jpg"}
             />
+
+            <Footer />
         </>
     )
 }
