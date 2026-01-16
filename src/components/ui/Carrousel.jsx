@@ -17,7 +17,13 @@ const MESSAGES = [
     "🛒 Envíos gratis en compras mayores a $150.000 ARG",
 ];
 
-export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }) {
+export default function Carrousel({
+    rubro,
+    images,
+    title,
+    yatayLogo,
+    subrubros
+}) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [index, setIndex] = useState(0);
 
@@ -63,7 +69,7 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
             <div className="absolute inset-0 bg-black/60" />
 
             {/* Overlay inferior */}
-            <div className="absolute bottom-0 left-0 w-full h-12 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-full h-10 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
 
             <div className="bg-black w-full border h-10 absolute top-0">
                 <AnimatePresence mode="wait">
@@ -80,7 +86,10 @@ export default function Carrousel({ rubro, images, title, yatayLogo, subrubros }
                 </AnimatePresence>
             </div>
 
-            <MainNavBar rubro={rubro} logo={yatayLogo} />
+            <MainNavBar
+                rubro={rubro}
+                logo={yatayLogo}
+            />
             <SubrubrosSection subrubros={subrubros} variant="light" />
 
             {/* Contenido en esquina inferior izquierda */}

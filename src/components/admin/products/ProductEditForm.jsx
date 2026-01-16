@@ -4,6 +4,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateProduct, deleteProduct } from "@/actions/products/products.actions.js";
+import CloudinaryGuiaTalleUploader from "./CloudinaryGuiaTalleUploader";
 import CloudinaryImageUploader from "./CloudinaryImageUploader";
 import ProductVariantsManager from "./ProductVariantsManager";
 
@@ -64,6 +65,7 @@ export default function ProductEditForm({ product, subrubros }) {
 
         startTransition(async () => {
             const result = await updateProduct(product.id, formData);
+
 
             if (result.success) {
                 setMessage({
@@ -215,6 +217,14 @@ export default function ProductEditForm({ product, subrubros }) {
             <ProductVariantsManager
                 variants={formData.variants}
                 onVariantsChange={(newVariants) => setFormData(prev => ({ ...prev, variants: newVariants }))}
+            />
+
+            {/* Guía de Talles */}
+            <CloudinaryGuiaTalleUploader
+                imageUrl={formData.guiaTalles}
+                onImageChange={(newUrl) => setFormData(prev => ({ ...prev, guiaTalles: newUrl }))}
+                label="Guía de Talles"
+                folder="guias-talles"
             />
 
             {/* Rubro y Stock */}

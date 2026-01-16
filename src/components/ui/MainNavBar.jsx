@@ -13,7 +13,10 @@ import CartIcon from "../cart/CartIcon";
 import CartDrawer from "../cart/CartDrawer";
 
 
-export default function MainNavBar({ rubro, logo }) {
+export default function MainNavBar({
+    rubro,
+    logo
+}) {
     const { data: session, status } = useSession();
     const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -66,13 +69,15 @@ export default function MainNavBar({ rubro, logo }) {
                 <div className="w-px bg-gray-500/40">/</div>
 
                 {/* Carrito */}
+                <CartIcon
+                    onClick={() => setIsCartOpen(true)}
+                    iconClassname="text-white hover:text-gray-400"
+                />
+
                 <CartDrawer
-                    rubro={rubro}
                     isOpen={isCartOpen}
                     onClose={() => setIsCartOpen(false)}
                 />
-
-                <CartIcon onClick={() => setIsCartOpen(true)} />
             </div>
 
         </div>

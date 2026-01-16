@@ -157,7 +157,7 @@ export default function SubrubrosNavBar({ subrubros, variant = "dark" }) {
     const padres = subrubros.filter(sub => !sub.parentId);
 
     return (
-        <div className={`${inter.className} w-full sticky top-65 z-40`}>
+        <div className={`${inter.className} w-full sticky top-42 z-40`}>
             <div className="max-w-7xl mx-auto flex gap-4 px-4 py-3 items-center" ref={dropdownRef}>
                 {padres.map((padre) => {
                     const tieneHijos = padre.children && padre.children.length > 0;

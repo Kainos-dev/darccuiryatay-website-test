@@ -12,6 +12,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     debug: false, // ← AGREGAR ESTO - deshabilita logs excesivos
 
+    pages: {
+        signIn: '/auth/login',
+        error: '/auth/login', // Redirigir errores al login
+    },
+
     providers: [
         Credentials({
             credentials: {
@@ -30,6 +35,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 if (!user || !user.password) {
                     throw new Error("Credenciales inválidas");
                 }
+
+                // ✅ Cambiar a código corto
+                /* if (!user.emailVerified) {
+                    throw new Error("EMAIL_NOT_VERIFIED");
+                } */
 
                 const isPasswordValid = await bcrypt.compare(
                     credentials.password,

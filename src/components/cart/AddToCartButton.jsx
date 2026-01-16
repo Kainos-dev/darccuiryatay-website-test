@@ -125,12 +125,12 @@ export default function AddToCartButton({
                 <button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock || isAdding}
-                    className={`flex items-center justify-center gap-2 px-5 py-3 rounded-sm font-semibold transition-all shadow-lg text-sm
+                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-sm font-semibold transition-all shadow-lg text-sm
                     ${isOutOfStock
                             ? "bg-gray-200 text-gray-500 cursor-not-allowed shadow-none"
                             : isAdding
-                                ? "bg-[#a0896c] text-white scale-[0.97]"
-                                : "bg-[#8c622a] text-white hover:brightness-110 active:scale-95"}
+                                ? "bg-light-brown text-white scale-[0.97]"
+                                : "bg-brown text-white hover:brightness-110 active:scale-95"}
                     `}
                 >
                     {isAdding ? (
@@ -149,11 +149,6 @@ export default function AddToCartButton({
                     )}
                 </button>
             </div>
-
-            {/* Stock máximo */}
-            {/* {!isOutOfStock && (
-                <p className="text-xs text-amber-600 mt-2">⚠️ Has alcanzado el stock máximo disponible</p>
-            )} */}
         </div>
     );
 }

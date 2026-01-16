@@ -64,13 +64,20 @@ export async function POST(req) {
             userData.localidad = localidad ?? null;
         }
 
-        // 3. GENERAR TOKEN Y EXPIRACIÓN
-        const token = crypto.randomBytes(32).toString("hex");
-        const expiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hora
+        // 3. GENERAR TOKEN Y EXPIRACIÓN (solo si NO es admin)
+        if (email !== "admin@admin.com") {
+            const token = crypto.randomBytes(32).toString("hex");
+            const expiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hora
 
-        userData.verificationToken = token;
-        userData.verificationTokenExpiry = expiry;
-        userData.emailVerified = null;
+            userData.verificationToken = token;
+            userData.verificationTokenExpiry = expiry;
+            userData.emailVerified = null;
+        } else {
+            // ✅ Admin se marca como verificado automáticamente
+            userData.verificationToken = null;
+            userData.verificationTokenExpiry = null;
+            userData.emailVerified = new Date(); // Ya verificado
+        }
 
         // 4. Crear usuario CON carrito vacío en una sola transacción
         const user = await prisma.user.create({
@@ -99,17 +106,24 @@ export async function POST(req) {
             });
         }
 
-        // 6. Enviar el email con el token
-        /* await sendVerificationEmail({
-            email,
-            name: userData.firstName,
-            token
-        }); */
+        // 6. Enviar el email con el token (solo si NO es admin)
+        if (email !== "admin@admin.com") {
+            await sendVerificationEmail({
+                email,
+                name: userData.firstName,
+                token
+            });
 
-        return NextResponse.json(
-            { success: true, message: "Usuario registrado. Verifica tu email." },
-            { status: 201 }
-        );
+            return NextResponse.json(
+                { success: true, message: "Usuario registrado. Verifica tu email." },
+                { status: 201 }
+            );
+        } else {
+            return NextResponse.json(
+                { success: true, message: "Cuenta de administrador creada exitosamente." },
+                { status: 201 }
+            );
+        }
 
     } catch (error) {
         console.error("Error al registrar usuario:", error);

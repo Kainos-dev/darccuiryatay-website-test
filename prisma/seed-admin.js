@@ -11,11 +11,16 @@ async function main() {
         firstName: "Admin",
         lastName: "Principal",
         email: "admin@admin.com",
-        password: await bcrypt.hash("Admin0421", 10), // Cambiá la contraseña si querés
-        role: "admin",
+        password: await bcrypt.hash("Admin0421", 10),
         phone: null,
         localidad: null,
         storeName: null,
+        role: "admin",
+
+        // 🔑 CLAVE
+        emailVerified: new Date(),      // email confirmado
+        verificationToken: null,
+        verificationTokenExpiry: null,
     };
 
     // Verificar si ya existe

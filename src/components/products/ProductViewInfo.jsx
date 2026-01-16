@@ -1,14 +1,33 @@
+'use client';
+
 import { useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+//components
+import Image from 'next/image';
 import CartIcon from '../cart/CartIcon';
 import CartDrawer from '../cart/CartDrawer';
-
 import AddToCartComponent from '../cart/AddToCartButton';
 
-export default function ProductViewInfo({ product, variants, setCurrentImageIndex }) {
+import { inter } from '@/app/ui/fonts';
+
+export default function ProductViewInfo({
+    userRole,
+    product,
+    variants,
+    setCurrentImageIndex
+}) {
     const router = useRouter();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [showGuiaTalles, setShowGuiaTalles] = useState(false);
+
+    const toggleGuiaTalles = () => {
+        setShowGuiaTalles(prev => !prev);
+    };
+
+    const isAdmin = userRole === "admin";
+    const isWholesale = userRole === "mayorista";
+    const isRetail = !isAdmin && !isWholesale;
 
     const displayCollection = useMemo(() => {
         return product.collection
@@ -47,7 +66,7 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
 
 
     return (
-        <div className="relative lg:w-1/2 w-full flex flex-col gap-6 p-6 lg:p-12 overflow-y-auto">
+        <div className={`${inter.className} relative lg:w-1/2 w-full flex flex-col gap-6 p-6 lg:p-12 overflow-y-auto`}>
             <div>
                 {displayCollection && (
                     <p className="text-sm lg:text-base text-white uppercase tracking-wide bg-[#90682f] px-2 py-1 rounded-sm inline">
@@ -71,7 +90,7 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
                     <div className="flex items-center gap-3">
                         <CartIcon
                             onClick={() => setIsCartOpen(true)}
-                            className="cursor-pointer"
+                            iconClassname='text-black hover:text-gray-400'
                         />
 
                         <CartDrawer
@@ -84,12 +103,40 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
             </div>
 
             <div className="border-t border-gray-200 pt-4 lg:pt-6">
-                <p className="text-lg sm:text-xl lg:text-3xl">
-                    Precio: ${product.price > 0 ? product.price.toLocaleString('es-AR') : 'Consultar'}
-                </p>
-                {product.priceWholesale && (
-                    <p className="text-base text-gray-600 mt-2">
-                        Precio mayorista: ${product.priceWholesale.toLocaleString('es-AR')}
+                {/* ADMIN → ve ambos */}
+                {isAdmin && (
+                    <>
+                        <p className="text-lg sm:text-xl lg:text-3xl">
+                            Precio minorista: $
+                            {product.price > 0
+                                ? product.price.toLocaleString('es-AR')
+                                : 'Consultar'}
+                        </p>
+
+                        {product.priceWholesale && (
+                            <p className="text-base text-gray-600 mt-2">
+                                Precio mayorista: $
+                                {product.priceWholesale.toLocaleString('es-AR')}
+                            </p>
+                        )}
+                    </>
+                )}
+
+                {/* MAYORISTA */}
+                {isWholesale && product.priceWholesale && (
+                    <p className="text-lg sm:text-xl lg:text-3xl">
+                        Precio Mayorista: $
+                        {product.priceWholesale.toLocaleString('es-AR')}
+                    </p>
+                )}
+
+                {/* MINORISTA / GUEST */}
+                {isRetail && (
+                    <p className="text-lg sm:text-xl lg:text-3xl">
+                        Precio Minorista: $
+                        {product.price > 0
+                            ? product.price.toLocaleString('es-AR')
+                            : 'Consultar'}
                     </p>
                 )}
             </div>
@@ -141,6 +188,51 @@ export default function ProductViewInfo({ product, variants, setCurrentImageInde
             </button>
 
             <AddToCartComponent product={product} selectedVariant={selectedVariant} />
+
+
+            {/* Guía de Talles */}
+            {product.guiaTalles && (
+                <div className="mt-6">
+
+                    <button
+                        onClick={() => setShowGuiaTalles(prev => !prev)}
+                        className="flex items-center gap-2 text-sm font-medium transition-colors"
+                    >
+                        <span>
+                            {showGuiaTalles ? "Ocultar guía de talles" : "Ver guía de talles"}
+                        </span>
+
+                        {/* Flecha */}
+                        <svg
+                            className={`w-4 h-4 transition-transform duration-300 ${showGuiaTalles ? "rotate-180" : "rotate-0"
+                                }`}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M19 9l-7 7-7-7"
+                            />
+                        </svg>
+                    </button>
+
+                    {/* Contenido colapsable */}
+                    <div
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${showGuiaTalles ? "max-h-[800px] opacity-100 mt-4" : "max-h-0 opacity-0"
+                            }`}
+                    >
+                        <img
+                            src={product.guiaTalles}
+                            alt="Guía de talles"
+                            className="w-full max-w-md rounded border"
+                        />
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }

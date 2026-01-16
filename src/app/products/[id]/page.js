@@ -7,6 +7,8 @@ import ProductView from '@/components/products/ProductView';
 import RelatedProductsCarousel from '@/components/products/RelatedProductsCarousel';
 import Footer from '@/components/ui/Footer';
 
+import { getCachedSession } from "@/lib/auth/auth-cache";
+
 // Revalidación cada 10 minutos
 export const revalidate = 600;
 
@@ -76,6 +78,9 @@ function RelatedProductsSkeleton() {
 
 export default async function ProductPage({ params }) {
     const { id } = await params;
+    const session = await getCachedSession();
+
+    const userRole = session?.user?.role || 'minorista';
 
     // Obtener producto
     const product = await getProduct(id);
@@ -94,7 +99,10 @@ export default async function ProductPage({ params }) {
     return (
         <main className="w-full">
             {/* Vista principal del producto */}
-            <ProductView product={product} />
+            <ProductView
+                product={product}
+                userRole={userRole}
+            />
 
             {/* Productos similares con Suspense para streaming */}
             <Suspense fallback={<RelatedProductsSkeleton />}>

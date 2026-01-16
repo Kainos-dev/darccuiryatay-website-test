@@ -16,10 +16,14 @@ export async function POST(req) {
         }
 
         // Buscar usuario con este token
-        const user = await prisma.user.findUnique({
-            where: { verificationToken: token }
+        const user = await prisma.user.findFirst({
+            where: {
+                verificationToken: token,
+                verificationTokenExpiry: {
+                    gt: new Date() // Validar expiración directamente en la query
+                }
+            }
         });
-
         if (!user) {
             return NextResponse.json(
                 { message: "Token inválido o expirado" },

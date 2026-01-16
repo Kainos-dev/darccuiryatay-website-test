@@ -10,6 +10,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function UserDropdown({ user }) {
+    const userRole = user?.role || 'minorista';
+
+    const url = userRole === 'admin' ? '/admin' : '/user';
+
     return (
         <Menu as="div" className="relative inline-block text-left">
             <Menu.Button className="flex items-center focus:outline-none">
@@ -54,14 +58,15 @@ export default function UserDropdown({ user }) {
 
                     {/* Opciones */}
                     <div className="py-1 text-gray-500">
+                        {/* PERFIL */}
                         <Menu.Item>
                             {({ active }) => (
                                 <Link
-                                    href="/admin"
+                                    href={url}
                                     className={`
-                                        flex items-center gap-3 px-4 py-2 text-sm
-                                        ${active ? "bg-gray-100" : ""}
-                                    `}
+                                            flex items-center gap-3 px-4 py-2 text-sm
+                                            ${active ? "bg-gray-100" : ""}
+                                        `}
                                 >
                                     <UserCircle2 className="w-5 h-5" />
                                     Mi Perfil
@@ -69,7 +74,8 @@ export default function UserDropdown({ user }) {
                             )}
                         </Menu.Item>
 
-                        <Menu.Item>
+                        {/* CONFIGURACION */}
+                        {/* <Menu.Item>
                             {({ active }) => (
                                 <Link
                                     href="/configuracion"
@@ -82,8 +88,9 @@ export default function UserDropdown({ user }) {
                                     Configuración
                                 </Link>
                             )}
-                        </Menu.Item>
+                        </Menu.Item> */}
 
+                        {/* CERRAR SESSION */}
                         <Menu.Item>
                             {({ active }) => (
                                 <button
@@ -101,6 +108,6 @@ export default function UserDropdown({ user }) {
                     </div>
                 </Menu.Items>
             </Transition>
-        </Menu>
+        </Menu >
     );
 }

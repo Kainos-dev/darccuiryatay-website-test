@@ -18,12 +18,15 @@ export default function CloudinaryImageUploader({
     maxFiles = 5,
     label = "Imágenes"
 }) {
+    
     const handleUploadSuccess = (result) => {
         if (result.event === 'success') {
             const newUrl = result.info.secure_url;
             onImagesChange([...images, newUrl]);
         }
     };
+
+    console.log(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)
 
     const handleRemoveImage = (indexToRemove) => {
         const newImages = images.filter((_, index) => index !== indexToRemove);

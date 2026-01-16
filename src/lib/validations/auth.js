@@ -70,16 +70,19 @@ const mayoristaSchema = z.object({
 });
 
 export const registerSchema = z.discriminatedUnion("role", [
-  minoristaSchema,
-  mayoristaSchema
+    minoristaSchema,
+    mayoristaSchema
 ]);
 
 export const forgotPasswordSchema = z.object({
     email: z
         .string()
-        .min(1, "El email es requerido")
+        .trim()
+        .min(1, "Email inválido")
+        .max(254, "Email inválido")
         .email("Email inválido"),
 });
+
 
 export const resetPasswordSchema = z.object({
     token: z.string().min(1, "Token inválido"),

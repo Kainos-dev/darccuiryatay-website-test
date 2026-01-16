@@ -1,4 +1,4 @@
-import ProductFormWithSubrubros from "@/components/admin/ProductFormWithSubrubros";
+import ProductFormWithSubrubros from "@/components/admin/products/ProductFormWithSubrubros";
 import { prisma } from "@/lib/db/prisma";
 
 async function getSubrubros() {

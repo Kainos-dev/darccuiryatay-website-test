@@ -26,8 +26,6 @@ const ProductCard = memo(({ product }) => {
         ? product.coverImages[0]
         : product.variants?.[0]?.images?.[0];
 
-    /* const mainImage = "https://res.cloudinary.com/ddbhwo6fn/image/upload/c_fill,g_auto/f_auto,q_auto/v1760583671/Varios_Motivos_ly45wj.jpg" */
-
     const alternativeImage = hasMultipleCoverImages
         ? product.coverImages[1]
         : null;

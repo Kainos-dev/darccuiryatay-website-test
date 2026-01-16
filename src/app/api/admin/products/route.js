@@ -61,7 +61,7 @@ export async function POST(request) {
 
         if (existingSKU) {
             return NextResponse.json(
-                { error: 'El SKU ya existe' },
+                { error: `YA EXISTE UN PRODUCTO CON EL CODIGO : ${body.sku}` },
                 { status: 400 }
             );
         }

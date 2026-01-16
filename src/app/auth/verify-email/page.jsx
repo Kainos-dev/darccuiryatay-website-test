@@ -1,6 +1,5 @@
-// app/auth/verify-email/page.jsx
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -10,18 +9,23 @@ function VerifyEmailContent() {
     const token = searchParams.get("token");
     const email = searchParams.get("email");
 
-    const [status, setStatus] = useState("verifying"); // verifying, success, error
+    const [status, setStatus] = useState("verifying");
     const [message, setMessage] = useState("");
     const [resendCooldown, setResendCooldown] = useState(0);
 
+    // ✅ Usar ref para evitar doble ejecución
+    const hasVerified = useRef(false);
+
     useEffect(() => {
-        if (token) {
+        // ✅ Solo verificar si hay token Y no se ha verificado antes
+        if (token && !hasVerified.current) {
+            hasVerified.current = true;
             verifyEmail(token);
-        } else if (!email) {
+        } else if (!email && !token) {
             setStatus("error");
             setMessage("Token de verificación no encontrado");
         }
-    }, [token]);
+    }, [token, email]);
 
     // Cooldown timer para reenviar email
     useEffect(() => {
@@ -47,7 +51,7 @@ function VerifyEmailContent() {
 
                 // Redirigir al login después de 3 segundos
                 setTimeout(() => {
-                    router.push("/auth?verified=true");
+                    router.push("/auth/login?verified=true");
                 }, 3000);
             } else {
                 setStatus("error");
@@ -62,7 +66,7 @@ function VerifyEmailContent() {
     const handleResendEmail = async () => {
         if (resendCooldown > 0 || !email) return;
 
-        setResendCooldown(60); // 60 segundos de cooldown
+        setResendCooldown(60);
 
         try {
             const res = await fetch("/api/auth/resend-verification", {
@@ -86,7 +90,7 @@ function VerifyEmailContent() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     {/* Icono y estado */}

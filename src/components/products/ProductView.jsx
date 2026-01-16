@@ -9,7 +9,10 @@ import ZoomOverlay from './ZoomOverlay';
 import ProductViewInfo from './ProductViewInfo';
 import { useIsTouchDevice } from '@/hooks/useIsTouchDevice';
 
-export default function ProductView({ product }) {
+export default function ProductView({
+    product,
+    userRole
+}) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     // 👇 Estados para zoom (solo en desktop)
@@ -225,6 +228,7 @@ export default function ProductView({ product }) {
 
             {/* Información del Producto */}
             <ProductViewInfo
+                userRole={userRole}
                 product={product}
                 variants={variantImageIndices}
                 setCurrentImageIndex={setCurrentImageIndex}
